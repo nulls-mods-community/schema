@@ -38,6 +38,10 @@
             "$ref": "localizedString.schema.json",
             "description": "The description of the feature."
         },
+        "@enabled": {
+            "type": "boolean",
+            "description": "Whether the feature is enabled by default."
+        },
         "@patches": {
             "type": [
                 "string",
