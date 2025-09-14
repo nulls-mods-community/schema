@@ -1,0 +1,106 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://ext.nulls.gg/mods/localizedString.schema.json",
+    "description": "A schema for validating localized strings in Null's Brawl Mods JSON files.",
+    "anyOf": [
+        {
+            "type": "string",
+            "defaultSnippets": [
+                {
+                    "label": "Non-translatable language string",
+                    "description": "Defines a non-translatable language string.",
+                    "body": "$1"
+                }
+            ]
+        },
+        {
+            "type": "object",
+            "description": "An object containing localized strings for different languages. Supports some of HTML tags.",
+            "defaultSnippets": [
+                {
+                    "label": "EN + RU",
+                    "description": "Defines a localized string with Russian and English translations.",
+                    "body": {
+                        "EN": "$1",
+                        "RU": "$2"
+                    }
+                },
+                {
+                    "label": "EN + TR",
+                    "description": "Defines a localized string with Turkish and English translations.",
+                    "body": {
+                        "EN": "$1",
+                        "TR": "$2"
+                    }
+                }
+            ],
+            "properties": {
+                "RU": {
+                    "type": "string"
+                },
+                "EN": {
+                    "type": "string"
+                },
+                "ES": {
+                    "type": "string"
+                },
+                "PT": {
+                    "type": "string"
+                },
+                "TR": {
+                    "type": "string"
+                },
+                "PL": {
+                    "type": "string"
+                },
+                "FR": {
+                    "type": "string"
+                },
+                "IT": {
+                    "type": "string"
+                },
+                "NL": {
+                    "type": "string"
+                },
+                "FI": {
+                    "type": "string"
+                },
+                "DE": {
+                    "type": "string"
+                },
+                "ID": {
+                    "type": "string"
+                },
+                "MS": {
+                    "type": "string"
+                },
+                "VI": {
+                    "type": "string"
+                },
+                "TH": {
+                    "type": "string"
+                },
+                "HE": {
+                    "type": "string"
+                },
+                "CN": {
+                    "type": "string"
+                },
+                "CNT": {
+                    "type": "string"
+                },
+                "KR": {
+                    "type": "string"
+                },
+                "JP": {
+                    "type": "string"
+                },
+                "AR": {
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false,
+            "minProperties": 1
+        }
+    ]
+}

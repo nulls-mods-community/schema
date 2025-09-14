@@ -1,0 +1,65 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://ext.nulls.gg/mods/schema.json",
+    "title": "Null's Brawl Mod",
+    "description": "A schema for validating Null's Brawl Mods JSON files.",
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "anyOf": [
+                {
+                    "const": "https://ext.nulls.gg/mods/schema.json"
+                },
+                {
+                    "const": "./schema/schema.json"
+                },
+                {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema.json'."
+                }
+            ]
+        },
+        "@title": {
+            "$ref": "localizedString.schema.json",
+            "description": "The name of the modification."
+        },
+        "@description": {
+            "$ref": "localizedString.schema.json",
+            "description": "The description of the modification."
+        },
+        "@author": {
+            "$ref": "localizedString.schema.json",
+            "description": "The author of the modification."
+        },
+        "@version": {
+            "type": "string",
+            "description": "The version of the modification.",
+            "pattern": "^\\d+.\\d+.\\d+$"
+        },
+        "@features": {
+            "type": "object",
+            "description": "The features of the modification.",
+            "additionalProperties": {
+                "$ref": "feature.schema.json"
+            },
+            "minProperties": 1
+        },
+        "@patches": {
+            "type": [
+                "string",
+                "array"
+            ],
+            "items": {
+                "type": "string"
+            },
+            "description": "The patch files associated with this modification."
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "@title",
+        "@description",
+        "@author"
+    ]
+}
