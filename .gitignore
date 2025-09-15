@@ -1,2 +1,6 @@
 /csv/
 /generated/
+/build/
+
+__pycache__/
+*.py[oc]

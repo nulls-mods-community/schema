@@ -6,10 +6,9 @@ import csv
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-CSV_DIR = BASE_DIR / "csv"
-GENERATED_SCHEMAS_DIR = BASE_DIR / "generated"
-ENHANCED_SCHEMAS_DIR = BASE_DIR / "enhanced_schemas"
+CSV_DIRECTORY_NAME = "csv"
+GENERATED_DIRECTORY_NAME = "generated"
+ENHANCED_DIRECTORY_NAME = "enhanced_schemas"
 
 PATCH_WHITELIST_UPDATE_KEYS = {"properties"}
 PATCH_WHITELIST_SET_KEYS = {"defaultSnippets", "description"}
@@ -21,7 +20,7 @@ TYPE_MAP = {
     "bool": "boolean"
 }
 
-def csv_to_schema(csv_path: Path) -> dict:
+def _csv_to_schema(csv_path: Path) -> dict:
     with csv_path.open(encoding="utf-8") as f:
         reader = csv.reader(f)
         columns = next(reader)
@@ -56,7 +55,7 @@ def csv_to_schema(csv_path: Path) -> dict:
                 "additionalProperties": {"$ref": "#/definitions/entry"},
                 "minProperties": 1
             }, 
-            "entry": {  # TODO: maybe renamt to csv singular variant
+            "entry": {  # TODO: maybe rename to csv singular variant
                 "type": "object", 
                 "properties": properties, 
                 "additionalProperties": False, 
@@ -67,7 +66,7 @@ def csv_to_schema(csv_path: Path) -> dict:
     }
 
 
-def merge_schemas(generated: dict, patch: dict) -> dict:
+def _merge_schemas(generated: dict, patch: dict) -> dict:
     gen_props = generated.get("additionalProperties", {}).get("properties", {})
     patch_props = patch.get("additionalProperties", {}).get("properties", {})
     for prop, patch_data in patch_props.items():
@@ -93,27 +92,28 @@ def merge_schemas(generated: dict, patch: dict) -> dict:
     return generated
 
 
-def try_enhance(generated: dict, enhanced_schema_path: Path) -> dict:
+def _try_enhance(generated: dict, enhanced_schema_path: Path) -> dict:
     if enhanced_schema_path.exists():
         print(f"Found enhancement for schema: {enhanced_schema_path}")
         with enhanced_schema_path.open("r", encoding="utf-8") as pf:
             patch_schema = json.load(pf)
-        return merge_schemas(generated, patch_schema)
+        return _merge_schemas(generated, patch_schema)
 
     return generated
 
 
-def main():
+def generate(csv_directory: Path, generated_directory: Path, enhanced_directory: Path | None = None) -> None:
     generated = {}
 
-    for csv_file in CSV_DIR.glob("**/*.csv"):
-        relative_path = csv_file.relative_to(CSV_DIR).with_suffix(".schema.json")
+    for csv_file in csv_directory.glob("**/*.csv"):
+        relative_path = csv_file.relative_to(csv_directory).with_suffix(".schema.json")
         
-        schema_path = GENERATED_SCHEMAS_DIR / relative_path
+        schema_path = generated_directory / relative_path
         schema_path.parent.mkdir(parents=True, exist_ok=True)
 
-        schema = csv_to_schema(csv_file)
-        schema = try_enhance(schema, ENHANCED_SCHEMAS_DIR / relative_path)
+        schema = _csv_to_schema(csv_file)
+        if enhanced_directory is not None:
+            schema = _try_enhance(schema, enhanced_directory / relative_path)
 
         with schema_path.open("w", encoding="utf-8") as f:
             json.dump(schema, f, indent=4)
@@ -124,12 +124,23 @@ def main():
     
     all_schema = {"$schema": "http://json-schema.org/draft-07/schema#", "properties": generated}
     
-    all_schema_path = GENERATED_SCHEMAS_DIR / "patches.schema.json"
+    all_schema_path = generated_directory / "patches.schema.json"
 
-    all_schema = try_enhance(all_schema, ENHANCED_SCHEMAS_DIR / "patches.schema.json")
+    if enhanced_directory is not None:
+        all_schema = _try_enhance(all_schema, enhanced_directory / "patches.schema.json")
+
     with all_schema_path.open("w", encoding="utf-8") as f:
         json.dump(all_schema, f, indent=4)
 
 
+def _main() -> None:
+    base = Path(__file__).parent
+    csv_directory = base / CSV_DIRECTORY_NAME
+    generated_directory = base / GENERATED_DIRECTORY_NAME
+    enhanced_directory = base / ENHANCED_DIRECTORY_NAME
+
+    generate(csv_directory, generated_directory, enhanced_directory)
+
+
 if __name__ == "__main__":
-    main()
+    _main()

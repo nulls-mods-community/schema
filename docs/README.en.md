@@ -29,6 +29,16 @@ Place all .csv files in the `csv/` folder at the root of the project and generat
 python3 generate.py
 ```
 
+### Publishing
+
+To publish, you can build a minified version of the schema:
+
+```sh
+python3 build.py
+```
+
+After running the script, the `build/` directory will contain a ready-to-use bundle with the generated schemas.
+
 ## About schema
 
 We use draft-07 as the language for describing JSON Schema, since the JSON Schema Validator in VS Code does not support versions above this.
