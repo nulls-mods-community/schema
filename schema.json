@@ -39,6 +39,10 @@
             },
             "minProperties": 1
         },
+        "@root": {
+            "type": "string",
+            "description": "A path to folder containing the game files for this modification. All files in this folder will be copied to the game directory."
+        },
         "@patches": {
             "type": [
                 "string",

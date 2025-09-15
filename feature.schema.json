@@ -45,6 +45,10 @@
                     "description": "Whether the feature is enabled by default.",
                     "default": true
                 },
+                "@root": {
+                    "type": "string",
+                    "description": "A path to folder containing the game files for this feature. All files in this folder will be copied to the game directory."
+                },
                 "@patches": {
                     "type": [
                         "string",
