@@ -26,7 +26,7 @@
         },
         "@description": {
             "$ref": "localizedString.schema.json",
-            "description": "The description of the modification."
+            "description": "A long description of the modification."
         },
         "@author": {
             "$ref": "localizedString.schema.json",

@@ -42,3 +42,8 @@ Possible solutions:
 ### Should `@enabled` be required if there is a non-empty `@conflicts`?
 
 In fact, such a requirement does not exist at the time of signing the modification. The only requirement is to resolve all conflicts before signing. However, if you force the use of `@enabled`, it will improve development convenience, as users will resolve conflicts immediately.
+
+## License
+
+This project is distributed under the MIT License.  
+The full text of the license can be found in the [LICENSE](./LICENSE) file.
