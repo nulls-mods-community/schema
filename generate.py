@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # This script generates JSON schema files from CSV files located in specified folders.
 # Each CSV file should have the first row as column names and the second row as data types
 # (int, float, str, bool). The script creates a corresponding .schema.json file for each CSV file.

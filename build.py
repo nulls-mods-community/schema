@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 import json
 import shutil
 from pathlib import Path
@@ -28,7 +30,7 @@ def _main() -> None:
     shutil.rmtree(build_dir, ignore_errors=True)
     build_dir.unlink(missing_ok=True)
 
-    for schema_file in base.glob("*.schema.json"):
+    for schema_file in base.glob("*schema.json"):
         _minify_schema(schema_file, build_dir / schema_file.relative_to(base))
 
     temp_build_dir = base / f"{BUILD_DIRECTORY_NAME}_tmp"
