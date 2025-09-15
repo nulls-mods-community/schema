@@ -6,9 +6,9 @@ import csv
 import json
 from pathlib import Path
 
-CSV_FOLDERS = ["csv_logic", "csv_client", "localization"]
 BASE_DIR = Path(__file__).parent
-SCHEMAS_DIR = BASE_DIR / "schemas"
+CSV_DIR = BASE_DIR / "csv"
+GENERATED_SCHEMAS_DIR = BASE_DIR / "generated"
 ENHANCED_SCHEMAS_DIR = BASE_DIR / "enhanced_schemas"
 
 PATCH_WHITELIST_UPDATE_KEYS = {"properties"}
@@ -93,11 +93,10 @@ def merge_schemas(generated: dict, patch: dict) -> dict:
     return generated
 
 
-def try_enhance(generated: dict, schema_file: Path, enhanced_path: Path) -> dict:
-    patch_path = enhanced_path / schema_file.name
-    print(f"Looking for patch: {patch_path}")
-    if patch_path.exists():
-        with patch_path.open("r", encoding="utf-8") as pf:
+def try_enhance(generated: dict, enhanced_schema_path: Path) -> dict:
+    if enhanced_schema_path.exists():
+        print(f"Found enhancement for schema: {enhanced_schema_path}")
+        with enhanced_schema_path.open("r", encoding="utf-8") as pf:
             patch_schema = json.load(pf)
         return merge_schemas(generated, patch_schema)
 
@@ -107,35 +106,27 @@ def try_enhance(generated: dict, schema_file: Path, enhanced_path: Path) -> dict
 def main():
     generated = {}
 
-    for folder in CSV_FOLDERS:
-        folder_path = BASE_DIR / folder
-        folder_output = SCHEMAS_DIR / folder
-        folder_output.mkdir(exist_ok=True)
+    for csv_file in CSV_DIR.glob("**/*.csv"):
+        relative_path = csv_file.relative_to(CSV_DIR).with_suffix(".schema.json")
+        
+        schema_path = GENERATED_SCHEMAS_DIR / relative_path
+        schema_path.parent.mkdir(parents=True, exist_ok=True)
 
-        enhanced_path = ENHANCED_SCHEMAS_DIR / folder
+        schema = csv_to_schema(csv_file)
+        schema = try_enhance(schema, ENHANCED_SCHEMAS_DIR / relative_path)
 
-        if not folder_path.exists():
-            continue
-        for csv_file in folder_path.glob("*.csv"):
-            schema = csv_to_schema(csv_file)
+        with schema_path.open("w", encoding="utf-8") as f:
+            json.dump(schema, f, indent=4)
+        print(f"Generated schema: {schema_path}")
 
-            schema_file = csv_file.with_suffix(".schema.json")
-
-            schema = try_enhance(schema, schema_file, enhanced_path)
-
-            schema_path = folder_output / schema_file.name
-            with schema_path.open("w", encoding="utf-8") as f:
-                json.dump(schema, f, indent=4)
-            print(f"Generated schema: {schema_path}")
-
-            # Note: using relative path with forward slashes for cross-platform compatibility. Windows \\ in $ref causes issues.
-            generated[csv_file.stem] = {"$ref": f"{schema_path.relative_to(SCHEMAS_DIR).as_posix()}#/definitions/entries"}
+        # Note: using relative path with forward slashes for cross-platform compatibility. Windows \\ in $ref causes issues.
+        generated[csv_file.stem] = {"$ref": f"{relative_path.as_posix()}"}
     
     all_schema = {"$schema": "http://json-schema.org/draft-07/schema#", "properties": generated}
     
-    all_schema_path = SCHEMAS_DIR / "all.schema.json"
+    all_schema_path = GENERATED_SCHEMAS_DIR / "patches.schema.json"
 
-    all_schema = try_enhance(all_schema, all_schema_path, ENHANCED_SCHEMAS_DIR)
+    all_schema = try_enhance(all_schema, ENHANCED_SCHEMAS_DIR / "patches.schema.json")
     with all_schema_path.open("w", encoding="utf-8") as f:
         json.dump(all_schema, f, indent=4)
 

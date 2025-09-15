@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft-07/schema",
-    "$id": "https://ext.nulls.gg/mods/localizedString.schema.json",
+    "$id": "https://ext.nulls.gg/mods/schema/localizedString.schema.json",
     "description": "A schema for validating localized strings in Null's Brawl Mods JSON files.",
     "anyOf": [
         {
