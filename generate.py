@@ -13,12 +13,8 @@ ENHANCED_DIRECTORY_NAME = "enhanced_schemas"
 PATCH_WHITELIST_UPDATE_KEYS = {"properties"}
 PATCH_WHITELIST_SET_KEYS = {"defaultSnippets", "description"}
 
-TYPE_MAP = {
-    "int": "integer",
-    "float": "number",
-    "str": "string",
-    "bool": "boolean"
-}
+TYPE_MAP = {"int": "integer", "float": "number", "str": "string", "bool": "boolean"}
+
 
 def _csv_to_schema(csv_path: Path) -> dict:
     with csv_path.open(encoding="utf-8") as f:
@@ -50,19 +46,19 @@ def _csv_to_schema(csv_path: Path) -> dict:
                 "type": "object",
                 "propertyNames": {
                     "type": "string",
-                    "examples": property_names_examples
+                    "examples": property_names_examples,
                 },
                 "additionalProperties": {"$ref": "#/definitions/entry"},
-                "minProperties": 1
-            }, 
+                "minProperties": 1,
+            },
             "entry": {  # TODO: maybe rename to csv singular variant
-                "type": "object", 
-                "properties": properties, 
-                "additionalProperties": False, 
-                "minProperties": 1
-            }
+                "type": "object",
+                "properties": properties,
+                "additionalProperties": False,
+                "minProperties": 1,
+            },
         },
-        "$ref": "#/definitions/entries"
+        "$ref": "#/definitions/entries",
     }
 
 
@@ -82,7 +78,11 @@ def _merge_schemas(generated: dict, patch: dict) -> dict:
     # Merge other top-level keys if needed (optional)
     for key, value in patch.items():
         if key in PATCH_WHITELIST_UPDATE_KEYS:
-            if key in generated and isinstance(generated[key], dict) and isinstance(value, dict):
+            if (
+                key in generated
+                and isinstance(generated[key], dict)
+                and isinstance(value, dict)
+            ):
                 generated[key].update(value)
             else:
                 generated[key] = value
@@ -102,12 +102,16 @@ def _try_enhance(generated: dict, enhanced_schema_path: Path) -> dict:
     return generated
 
 
-def generate(csv_directory: Path, generated_directory: Path, enhanced_directory: Path | None = None) -> None:
+def generate(
+    csv_directory: Path,
+    generated_directory: Path,
+    enhanced_directory: Path | None = None,
+) -> None:
     generated = {}
 
     for csv_file in csv_directory.glob("**/*.csv"):
         relative_path = csv_file.relative_to(csv_directory).with_suffix(".schema.json")
-        
+
         schema_path = generated_directory / relative_path
         schema_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -121,13 +125,18 @@ def generate(csv_directory: Path, generated_directory: Path, enhanced_directory:
 
         # Note: using relative path with forward slashes for cross-platform compatibility. Windows \\ in $ref causes issues.
         generated[csv_file.stem] = {"$ref": f"{relative_path.as_posix()}"}
-    
-    all_schema = {"$schema": "http://json-schema.org/draft-07/schema#", "properties": generated}
-    
+
+    all_schema = {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "properties": generated,
+    }
+
     all_schema_path = generated_directory / "patches.schema.json"
 
     if enhanced_directory is not None:
-        all_schema = _try_enhance(all_schema, enhanced_directory / "patches.schema.json")
+        all_schema = _try_enhance(
+            all_schema, enhanced_directory / "patches.schema.json"
+        )
 
     with all_schema_path.open("w", encoding="utf-8") as f:
         json.dump(all_schema, f, indent=4)
