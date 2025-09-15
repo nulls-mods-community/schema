@@ -1,24 +1,14 @@
 {
     "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://ext.nulls.gg/mods/schema/schema.json",
-    "title": "Null's Brawl Mod",
-    "description": "A schema for validating Null's Brawl Mods JSON files.",
+    "title": "Null's Modification file",
+    "description": "A schema for validating Null's Mods JSON files.",
     "type": "object",
     "properties": {
         "$schema": {
-            "anyOf": [
-                {
-                    "const": "https://ext.nulls.gg/mods/schama/schema.json"
-                },
-                {
-                    "const": "./schema/schema.json"
-                },
-                {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema/schema.json'."
-                }
-            ]
+            "type": "string",
+            "format": "uri",
+            "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema/schema.json'."
         },
         "@title": {
             "$ref": "localizedString.schema.json",

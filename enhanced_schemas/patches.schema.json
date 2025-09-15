@@ -3,19 +3,9 @@
     "type": "object",
     "properties": {
         "$schema": {
-            "anyOf": [
-                {
-                    "const": "https://ext.nulls.gg/mods/patches.schema.json"
-                },
-                {
-                    "const": "./schema/patches.schema.json"
-                },
-                {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/patches.schema.json'."
-                }
-            ]
+            "type": "string",
+            "format": "uri",
+            "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema/patches.schema.json'."
         }
     }
 }

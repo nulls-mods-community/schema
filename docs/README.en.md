@@ -1,4 +1,35 @@
-# Null's Brawl Mod JSON Schema
+# Null's Mods JSON Schema
+
+A schema for validating Null's Mods JSON files.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Usage
+
+You can use `https://ext.nulls.gg/mods/schema/schema.json` as the `$schema` in any JSON file.
+
+When writing patch files (those referenced in `@patches`), use `https://ext.nulls.gg/mods/schema/patches.schema.json`.
+
+### Locally
+
+To use the schema locally, follow all steps from the [Development](#development) section and specify the full path to `schema.json` in `$schema` using a [file:/// URI](https://en.wikipedia.org/wiki/File_URI_scheme) in any JSON file.
+
+When writing patch files (those referenced in `@patches`), use the full path to `patches.schema.json` instead.
+
+## Development
+
+```sh
+git clone https://github.com/nulls-mods-community/schema
+cd schema
+```
+
+Place all .csv files in the `csv/` folder at the root of the project and generate patch schemas from them.
+
+```sh
+python3 generate.py
+```
+
+## About schema
 
 We use draft-07 as the language for describing JSON Schema, since the JSON Schema Validator in VS Code does not support versions above this.
 
