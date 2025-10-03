@@ -14,7 +14,7 @@ CSV_DIRECTORY_NAME = "csv"
 GENERATED_DIRECTORY_NAME = "generated"
 ENHANCED_DIRECTORY_NAME = "enhanced_schemas"
 
-PATCH_WHITELIST_UPDATE_KEYS = {"properties", "definitions"}
+PATCH_WHITELIST_UPDATE_KEYS = {"properties", "definitions", "required"}
 PATCH_WHITELIST_SET_KEYS = {"defaultSnippets", "description"}
 
 TYPE_MAP = {"int": "integer", "float": "number", "str": "string", "bool": "boolean"}
