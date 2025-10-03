@@ -4,59 +4,21 @@
     "title": "Null's Modification file",
     "description": "A schema for validating Null's Mods JSON files.",
     "type": "object",
-    "properties": {
-        "$schema": {
-            "type": "string",
-            "format": "uri",
-            "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema/schema.json'."
+    "allOf": [
+        {
+            "properties": {
+                "$schema": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "The schema version used. Should always be 'https://ext.nulls.gg/mods/schema/schema.json'."
+                }
+            }
         },
-        "@title": {
-            "$ref": "localizedString.schema.json",
-            "description": "The name of the modification."
+        {
+            "$ref": "./meta.schema.json"
         },
-        "@description": {
-            "$ref": "localizedString.schema.json",
-            "description": "A long description of the modification."
-        },
-        "@author": {
-            "$ref": "localizedString.schema.json",
-            "description": "The author of the modification."
-        },
-        "@version": {
-            "type": "string",
-            "description": "The version of the modification.",
-            "default": "1.0.0",
-            "pattern": "^(0|[1-9]\\d{0,5})\\.(0|[1-9]\\d{0,5})\\.(0|[1-9]\\d{0,5})$"
-        },
-        "@features": {
-            "type": "object",
-            "description": "The features of the modification.",
-            "propertyNames": {
-                "$ref": "feature.schema.json#/definitions/key"
-            },
-            "additionalProperties": {
-                "$ref": "feature.schema.json"
-            },
-            "minProperties": 1
-        },
-        "@root": {
-            "type": "string",
-            "description": "A path to folder containing the game files for this modification. All files in this folder will be copied to the game directory."
-        },
-        "@patches": {
-            "type": [
-                "string",
-                "array"
-            ],
-            "items": {
-                "type": "string"
-            },
-            "description": "The patch files associated with this modification."
+        {
+            "$ref": "./generated/patches.schema.json"
         }
-    },
-    "additionalProperties": false,
-    "required": [
-        "@title",
-        "@description"
     ]
 }

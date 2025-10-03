@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://ext.nulls.gg/mods/schema/feature.schema.json",
+    "description": "A schema for validating feature metadata in Null's Mods JSON files.",
+    "definitions": {
+        "meta": {
+            "type": "object",
+            "defaultSnippets": [
+                {
+                    "label": "@name",
+                    "description": "Defines a feature with name only.",
+                    "body": {
+                        "@name": "$1"
+                    }
+                },
+                {
+                    "label": "@name + @patches",
+                    "description": "Defines a feature with name and patches.",
+                    "body": {
+                        "@name": "$1",
+                        "@patches": "$2"
+                    }
+                },
+                {
+                    "label": "@name + @description + @patches",
+                    "description": "Defines a feature with name, description, and patches.",
+                    "body": {
+                        "@name": "$1",
+                        "@description": "$2",
+                        "@patches": "$3"
+                    }
+                }
+            ],
+            "properties": {
+                "@name": {
+                    "$ref": "localizedString.schema.json",
+                    "description": "The name of the feature."
+                },
+                "@description": {
+                    "$ref": "localizedString.schema.json",
+                    "description": "The description of the feature."
+                },
+                "@enabled": {
+                    "type": "boolean",
+                    "description": "Whether the feature is enabled by default.",
+                    "default": true
+                },
+                "@root": {
+                    "type": "string",
+                    "description": "A path to folder containing the game files for this feature. All files in this folder will be copied to the game directory."
+                },
+                "@patches": {
+                    "type": [
+                        "string",
+                        "array"
+                    ],
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "The patch files associated with this feature."
+                },
+                "@conflicts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/key"
+                    },
+                    "description": "A list of feature keys that conflict with this feature."
+                }
+            },
+            "required": [
+                "@name"
+            ]
+        },
+        "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32
+        }
+    },
+    "$ref": "#/definitions/meta",
+    "additionalProperties": false
+}

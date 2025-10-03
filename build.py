@@ -9,6 +9,7 @@ from generate import (
     ENHANCED_DIRECTORY_NAME,
     GENERATED_DIRECTORY_NAME,
     generate,
+    generate_flatten_schema
 )
 
 BUILD_DIRECTORY_NAME = "build"
@@ -30,10 +31,10 @@ def _main() -> None:
     shutil.rmtree(build_dir, ignore_errors=True)
     build_dir.unlink(missing_ok=True)
 
-    for schema_file in base.glob("*schema.json"):
-        _minify_schema(schema_file, build_dir / schema_file.relative_to(base))
-
     temp_build_dir = base / f"{BUILD_DIRECTORY_NAME}_tmp"
+
+    for schema_file in base.glob("*schema.json"):
+        _minify_schema(schema_file, temp_build_dir / schema_file.relative_to(base))
 
     try:
         generate(
@@ -41,8 +42,14 @@ def _main() -> None:
             temp_build_dir / GENERATED_DIRECTORY_NAME,
             base / ENHANCED_DIRECTORY_NAME,
         )
+        
+        flatten_schema_path = generate_flatten_schema(temp_build_dir / "schema.json", temp_build_dir)
+        print(f"{flatten_schema_path.as_posix()} was generated")
+        
+        flatten_schema_path = generate_flatten_schema(temp_build_dir / "feature.schema.json", temp_build_dir)
+        print(f"{flatten_schema_path.as_posix()} was generated")
 
-        for schema_file in temp_build_dir.glob("**/*.schema.json"):
+        for schema_file in temp_build_dir.glob("**/*schema.json"):
             _minify_schema(
                 schema_file, build_dir / schema_file.relative_to(temp_build_dir)
             )

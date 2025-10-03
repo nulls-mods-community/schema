@@ -26,7 +26,8 @@ cd schema
 Place all .csv files in the `csv/` folder at the root of the project and generate patch schemas from them.
 
 ```sh
-python3 generate.py
+python3 generate.py  # or
+make generate
 ```
 
 ### Publishing
@@ -34,7 +35,8 @@ python3 generate.py
 To publish, you can build a minified version of the schema:
 
 ```sh
-python3 build.py
+python3 build.py  # or
+make
 ```
 
 After running the script, the `build/` directory will contain a ready-to-use bundle with the generated schemas.
@@ -62,6 +64,10 @@ In the file `%LOCALAPPDATA%\Programs\Microsoft VS Code\resources\app\extensions\
 if(n.examples)for(let t=0;t<n.examples.length;t++){e(n.examples[t],undefined,undefined,undefined)};
 ```
 
+## Embedded-patches
+
+See the section [Embedded-patches support](#embedded-patches-support). As the current solution we chose the second option: the combined schema file is generated from several separate schemas using the `schema.json` template, which does not forbid the use of `additionalProperties`. When the schema is built with `build.py`, the template is expanded into a schema with restricted `additionalProperties`.
+
 ## TODO
 
 ### Array support
@@ -70,7 +76,7 @@ Currently, the patches schema does not have arrays as values. It is planned to a
 
 ### Embedded-patches support
 
-Currently, the schema does not support using patches alongside metadata. This was not added due to draft-07 limitations, since you cannot simultaneously combine different schemas (`allOf`) and prohibit `additionalProperties`.
+Due to draft-07 limitations, the combined schema for a mod is generated with a Python script, since you cannot both merge different schemas (`allOf`) and prohibit `additionalProperties` at the same time. This may change in the future.
 
 Possible solutions:
 
