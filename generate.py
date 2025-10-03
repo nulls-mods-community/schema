@@ -17,7 +17,7 @@ ENHANCED_DIRECTORY_NAME = "enhanced_schemas"
 PATCH_WHITELIST_UPDATE_KEYS = {"properties", "definitions", "required"}
 PATCH_WHITELIST_SET_KEYS = {"defaultSnippets", "description"}
 
-TYPE_MAP = {"int": "integer", "float": "number", "str": "string", "bool": "boolean"}
+TYPE_MAP = {"int": "integer", "float": "number", "str": "string", "boolean": "boolean"}
 
 Schema: TypeAlias = dict[str, Any]
 
