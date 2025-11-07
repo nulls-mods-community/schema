@@ -55,9 +55,14 @@ make
 
 Текущая схема позволяет инструментам работы с JSON Schema подсказывать имена `properties` (колонок таблиц), а также предполагает подсказки `propertyNames` (строк таблиц) через `examples`. 
 
-Однако в текущей версии VS Code (1.104.0) не реализованы подсказки `propertyNames` через `examples`. Pull Request с исправлением этого уже отправлен, остаётся только ждать.
-
 ### Патч VS Code
+
+Начиная с VS Code 1.105.0 появились подсказки `propertyNames` через `examples`, этот раздел устарел.
+
+<details>
+<summary>Для более версий 1.104.0 и ниже</summary>
+
+В VS Code 1.104.0 и ниже не реализованы подсказки `propertyNames` через `examples`. 
 
 Если вы хотите использовать эту схему полноценно, то можете добавить в свой VS Code эту функцию с помощью небольшого патча.
 
@@ -65,6 +70,8 @@ make
 ```js
 if(n.examples)for(let t=0;t<n.examples.length;t++){e(n.examples[t],undefined,undefined,undefined)};
 ```
+
+</details>
 
 ## Embedded-patches
 
