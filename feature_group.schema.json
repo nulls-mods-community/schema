@@ -1,0 +1,90 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema",
+    "$id": "https://ext.nulls.gg/mods/schema/feature_group.schema.json",
+    "description": "A schema for validating feature group metadata in Null's Mods JSON files.",
+    "definitions": {
+        "meta": {
+            "type": "object",
+            "defaultSnippets": [
+                {
+                    "label": "@name + @features",
+                    "description": "Defines a group with name and features.",
+                    "body": {
+                        "@name": "$1",
+                        "@features": [
+                            "$2"
+                        ]
+                    }
+                },
+                {
+                    "label": "@name + @description + @features",
+                    "description": "Defines a group with name, description and features.",
+                    "body": {
+                        "@name": "$1",
+                        "@description": "$2",
+                        "@features": [
+                            "$3"
+                        ]
+                    }
+                },
+                {
+                    "label": "Radio group + @name + @features",
+                    "description": "Defines a radio group with name and features.",
+                    "body": {
+                        "@name": "$1",
+                        "@type": "RADIO_GROUP",
+                        "@features": [
+                            "$2"
+                        ]
+                    }
+                },
+                {
+                    "label": "Radio group + @name + @description + @features",
+                    "description": "Defines a radio group with name, description and features.",
+                    "body": {
+                        "@name": "$1",
+                        "@description": "$2",
+                        "@type": "RADIO_GROUP",
+                        "@features": [
+                            "$3"
+                        ]
+                    }
+                }
+            ],
+            "properties": {
+                "@name": {
+                    "$ref": "localizedString.schema.json",
+                    "description": "The name of the feature group."
+                },
+                "@description": {
+                    "$ref": "localizedString.schema.json",
+                    "description": "The description of the feature group."
+                },
+                "@type": {
+                    "type": "string",
+                    "enum": [
+                        "DEFAULT",
+                        "RADIO_GROUP"
+                    ]
+                },
+                "@features": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "feature.meta.schema.json#/definitions/key"
+                    },
+                    "description": "A list of group features.",
+                    "minItems": 1
+                }
+            },
+            "required": [
+                "@name",
+                "@features"
+            ]
+        },
+        "key": {
+            "$ref": "feature.meta.schema.json#/definitions/key"
+        }
+    },
+    "$ref": "#/definitions/meta",
+    "additionalProperties": false
+}
